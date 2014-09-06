@@ -1,0 +1,10 @@
+.classpath
+.eclipseme
+.eclipseme.tmp/
+.project
+.settings/
+bin/*
+deployed/*
+*.jad
+tests/*
+
