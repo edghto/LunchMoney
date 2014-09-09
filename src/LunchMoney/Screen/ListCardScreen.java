@@ -1,4 +1,5 @@
 package LunchMoney.Screen;
+
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
@@ -40,8 +41,11 @@ public class ListCardScreen extends List {
 					if(index >= 0) {
 						Card card = (Card)CardList.getInstance()
 								.elementAt(index);
-						card.update();
-						refresh(getSelectedIndex(), card);
+						if(card.update() )
+							refresh(getSelectedIndex(), card);
+						else
+							lunchMoneyController.request(
+									LunchMoneyController.NOTIFY_ERROR);
 					}
 				} else if (addCmd == command) {
 					lunchMoneyController.request(

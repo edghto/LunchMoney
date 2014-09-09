@@ -2,7 +2,7 @@ package LunchMoney;
 
 import java.util.Vector;
 
-public class CardList extends Vector {
+public class CardList extends Vector{
 
 	protected static CardList instance = null; 
 	
