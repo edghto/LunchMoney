@@ -31,9 +31,9 @@ public class LunchMoney extends MIDlet implements LunchMoneyController {
 	}
 
 	protected void startApp() {
-		changeDisplay(listCardScreen);
 		if(!loadCards())
 			request(NOTIFY_ERROR);
+		changeDisplay(listCardScreen);
 	}
 
 	private boolean saveCards() {
@@ -43,7 +43,7 @@ public class LunchMoney extends MIDlet implements LunchMoneyController {
 					"LunchMoney.cards.dat", true);
 			CardList cardList = CardList.getInstance();
 			
-			for(int i = 0; i < cardList.size(); ++i) {
+			for(int i = 1; i <= cardList.size(); ++i) {
 				Card card = (Card) cardList.elementAt(i);
 				byte[] b = card.toByte();
 				rs.addRecord(b, 0, b.length);
@@ -68,7 +68,7 @@ public class LunchMoney extends MIDlet implements LunchMoneyController {
 					"LunchMoney.cards.dat", false);
 			CardList cardList = CardList.getInstance();
 			
-			for(int i = 0; i < rs.getNumRecords(); ++i) {
+			for(int i = 1; i <= rs.getNumRecords(); ++i) {
 				Card card = new Card(rs.getRecord(i));
 				cardList.addElement(card);
 			}
