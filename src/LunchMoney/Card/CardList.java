@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public class CardList extends Vector implements CardListener {
 
-	protected static CardList instance = null; 
+	private static CardList instance = null; 
 	
 	private CardList() {}
 	

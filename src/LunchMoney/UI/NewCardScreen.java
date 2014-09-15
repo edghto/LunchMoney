@@ -12,25 +12,22 @@ import LunchMoney.Card.CardController;
 
 public class NewCardScreen extends Form {
 
-	protected LunchMoneyController lunchMoneyController = null;
-	protected CardController cardController = null;
+	private CardController cardController = null;
 
-	protected TextField codeField = new TextField("Code", null, 4,
+	private TextField codeField = new TextField("Code", null, 4,
 			TextField.DECIMAL);
-	protected TextField cardNumberField = new TextField("Card No", null, 10,
+	private TextField cardNumberField = new TextField("Card No", null, 10,
 			TextField.DECIMAL);
 
-	private Command okCmd = new Command("OK", Command.OK, 0);
+	private Command okCmd = new Command("OK", Command.SCREEN, 0);
 	private Command cancelCmd = new Command("Cancel", Command.EXIT, 1);
 
-	protected boolean isNew = true;
-	protected Card card;
+	private boolean isNew = true;
+	private Card card;
 
 	public NewCardScreen(final LunchMoneyController lunchMoneyController,
 			final CardController cardController) {
 		super("Your card");
-
-		this.lunchMoneyController = lunchMoneyController;
 		this.cardController = cardController;
 
 		append(codeField);

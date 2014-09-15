@@ -16,12 +16,12 @@ import LunchMoney.UI.NewCardScreen;
 
 public class LunchMoney extends MIDlet implements LunchMoneyController {
 
-	protected ListCardScreen listCardScreen;
-	protected NewCardScreen newCardScreen;
-	protected Alert alert;
-	protected String dbName = "LunchMoney.cards.dat";
-	protected CardDBManager dbManager = new CardDBManager(dbName);
-	protected CardController cardController = new CardController();
+	private ListCardScreen listCardScreen;
+	private NewCardScreen newCardScreen;
+	private Alert alert;
+	private String dbName = "LunchMoney.cards.dat";
+	private CardDBManager dbManager = new CardDBManager(dbName);
+	private CardController cardController = new CardController();
 
 	public LunchMoney() {
 		listCardScreen = new ListCardScreen(this);

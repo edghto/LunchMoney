@@ -8,7 +8,7 @@ public class CardController {
 	public final static int EDIT_CARD = 1;
 	public final static int DEL_CARD = 2;
 
-	protected Vector listeners = new Vector();
+	private Vector listeners = new Vector();
 	
 	public CardController() {
 		registerListener(CardList.getInstance());

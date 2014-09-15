@@ -15,12 +15,11 @@ import LunchMoney.Card.CardListener;
 
 public class ListCardScreen extends List implements CardListener {
 
-	protected LunchMoneyController lunchMoneyController;
-	protected Command updateCmd = new Command("Update", Command.OK, 0);
-	protected Command addCmd = new Command("Add", Command.OK, 0);
-	protected Command delCmd = new Command("Delete", Command.OK, 0);
-	protected Command editCmd = new Command("Edit", Command.OK, 0);
-	protected Vector cardsId = new Vector();
+	private Command updateCmd = new Command("Update", Command.SCREEN, 0);
+	private Command addCmd = new Command("Add", Command.OK, 0);
+	private Command delCmd = new Command("Delete", Command.OK, 0);
+	private Command editCmd = new Command("Edit", Command.OK, 0);
+	private Vector cardsId = new Vector();
 
 	public String getSelectedItem() {
 		return getString(getSelectedIndex());
@@ -28,7 +27,6 @@ public class ListCardScreen extends List implements CardListener {
 
 	public ListCardScreen(final LunchMoneyController lunchMoneyController) {
 		super("Your Lunch Cards", List.IMPLICIT);
-		this.lunchMoneyController = lunchMoneyController;
 		
 		addCommand(updateCmd);
 		addCommand(addCmd);

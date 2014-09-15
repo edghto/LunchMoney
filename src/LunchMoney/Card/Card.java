@@ -14,7 +14,6 @@ public class Card  {
 	public String code;
 	public String cardNumber;
 	public double balance;
-	public int id = -1;
 	public int recordId = -1;
 	//public DateTime date; //TODO add ;)
 	private CardController cardController;
@@ -111,6 +110,6 @@ public class Card  {
 	}
 
 	public String dump() {
-		return "id=" + id + ", recordId="+recordId+",code="+code;
+		return "recordId="+recordId+",code="+code;
 	}
 }
