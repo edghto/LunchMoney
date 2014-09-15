@@ -1,5 +1,7 @@
 package LunchMoney.Card;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -74,25 +76,38 @@ public class Card  {
 	}
 
 	public byte[] toByte() {
-		String str = code + ";"  + cardNumber + ";" + balance;
-		return str.getBytes();
+		ByteArrayOutputStream streamBytes = new ByteArrayOutputStream();
+		DataOutputStream outputStream = new DataOutputStream(streamBytes);
+		
+		try {
+			outputStream.writeUTF(code);
+			outputStream.writeUTF(cardNumber);
+			outputStream.writeUTF(balance+"");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return streamBytes.toByteArray();
 	}
 
 	public void fromByte(byte[] record) {
-		String recordStr = new String(record);
-//		int codeIdx = 0;
-//		int cardNoIdx = recordStr.indexOf(";") + 1;
-//		int balanceIdx = recordStr.indexOf(";", cardNoIdx) + 1;
-//		
-//		code = recordStr.substring(codeIdx, cardNoIdx-2);
-//		cardNumber = recordStr.substring(cardNoIdx, balanceIdx - 2);
-//		try {
-//			balance = Double.parseDouble(
-//					recordStr.substring(balanceIdx).trim());
-//		} catch(NumberFormatException e) {
-//			e.printStackTrace();
-//		}
-		code = recordStr;
+		String balanceStr = null;
+		ByteArrayInputStream strmBytes = new ByteArrayInputStream(record);
+	    DataInputStream inputStream = new DataInputStream(strmBytes);
+
+	    try {
+		    code = inputStream.readUTF();
+		    cardNumber = inputStream.readUTF();
+		    balanceStr = inputStream.readUTF();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    
+		try {
+			balance = Double.parseDouble(balanceStr.trim());
+		} catch(NumberFormatException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String dump() {
