@@ -1,5 +1,7 @@
 package LunchMoney.UI;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
@@ -18,6 +20,7 @@ public class ListCardScreen extends List implements CardListener {
 	protected Command addCmd = new Command("Add", Command.OK, 0);
 	protected Command delCmd = new Command("Delete", Command.OK, 0);
 	protected Command editCmd = new Command("Edit", Command.OK, 0);
+	protected Vector cardsId = new Vector();
 
 	public String getSelectedItem() {
 		return getString(getSelectedIndex());
@@ -26,9 +29,7 @@ public class ListCardScreen extends List implements CardListener {
 	public ListCardScreen(final LunchMoneyController lunchMoneyController) {
 		super("Your Lunch Cards", List.IMPLICIT);
 		this.lunchMoneyController = lunchMoneyController;
-
-		refresh();
-
+		
 		addCommand(updateCmd);
 		addCommand(addCmd);
 		addCommand(delCmd);
@@ -63,34 +64,32 @@ public class ListCardScreen extends List implements CardListener {
 		});
 	}
 
-	public void delete(int index) {
-		super.delete(index);
-	}
-
-	public void refresh(int index, Card card) {
-		this.set(index, card.toString(), null);
-	}
-
-	public void refresh() {
-		this.deleteAll();
-		CardList cardList = CardList.getInstance();
-		for (int i = 0; i < cardList.size(); ++i) {
-			Card card = (Card) cardList.elementAt(i);
-			append(card.toString(), null);
-		}
-	}
-
 	public boolean processEvent(Card card, int eventType) {
+		int index = getIndex(card.recordId);
+		
 		System.out.println(card.dump() + ", event: " + eventType);
-		if (eventType == CardController.EDIT_CARD)
-			set(card.id, card.toString(), null);
-		else if (eventType == CardController.NEW_CARD)
-			card.id = append(card.toString(), null);
-		else if (eventType == CardController.DEL_CARD)
-			delete(card.id);
-		else
+		
+		if (eventType == CardController.EDIT_CARD) {
+			set(index, card.toString(), null);
+		} else if (eventType == CardController.NEW_CARD) {
+			append(card.toString(), null);
+			cardsId.addElement(new Integer(card.recordId));
+		} else if (eventType == CardController.DEL_CARD) {
+			delete(index);
+			cardsId.removeElementAt(index);
+		} else {
 			return false;
-
+		}
+		
 		return true;
+	}
+	
+	private int getIndex(int cardId) {
+		int i = 0;
+		for(; i < cardsId.size(); ++i) 
+			if(cardId == ((Integer)cardsId.elementAt(i)).intValue())
+				return i;
+
+		return -1;
 	}
 }
