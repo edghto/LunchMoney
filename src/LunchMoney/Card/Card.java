@@ -1,4 +1,4 @@
-package LunchMoney;
+package LunchMoney.Card;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,7 +12,10 @@ public class Card  {
 	public String code;
 	public String cardNumber;
 	public double balance;
+	public int id = -1;
+	public int recordId = -1;
 	//public DateTime date; //TODO add ;)
+	private CardController cardController;
 	
 	public Card() {
 		code = "null";
@@ -20,20 +23,8 @@ public class Card  {
 		balance = 0;
 	}
 	
-	public Card(byte[] record) {
-		String recordStr = new String(record);
-		int codeIdx = 0;
-		int cardNoIdx = recordStr.indexOf(";") + 1;
-		int balanceIdx = recordStr.indexOf(";", cardNoIdx) + 1;
-		
-		code = recordStr.substring(codeIdx, cardNoIdx-2);
-		cardNumber = recordStr.substring(cardNoIdx, balanceIdx - 2);
-		try {
-			balance = Double.parseDouble(
-					recordStr.substring(balanceIdx).trim());
-		} catch(NumberFormatException e) {
-			e.printStackTrace();
-		}
+	public Card(CardController cardController) {
+		this.cardController= cardController; 
 	}
 
 	public boolean update() {
@@ -73,6 +64,10 @@ public class Card  {
 		return true;
 	}
 	
+	public void notifyEvent(int eventType) {
+		cardController.notifyEvent(this, eventType);
+	}
+	
 	public String toString() {
 		return code //+ " " + cardNumber 
 				+ "    " + balance + "zl";
@@ -81,5 +76,26 @@ public class Card  {
 	public byte[] toByte() {
 		String str = code + ";"  + cardNumber + ";" + balance;
 		return str.getBytes();
+	}
+
+	public void fromByte(byte[] record) {
+		String recordStr = new String(record);
+//		int codeIdx = 0;
+//		int cardNoIdx = recordStr.indexOf(";") + 1;
+//		int balanceIdx = recordStr.indexOf(";", cardNoIdx) + 1;
+//		
+//		code = recordStr.substring(codeIdx, cardNoIdx-2);
+//		cardNumber = recordStr.substring(cardNoIdx, balanceIdx - 2);
+//		try {
+//			balance = Double.parseDouble(
+//					recordStr.substring(balanceIdx).trim());
+//		} catch(NumberFormatException e) {
+//			e.printStackTrace();
+//		}
+		code = recordStr;
+	}
+
+	public String dump() {
+		return "id=" + id + ", recordId="+recordId+",code="+code;
 	}
 }

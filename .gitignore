@@ -3,6 +3,7 @@
 .eclipseme.tmp/
 .project
 .settings/
+.processed
 bin/*
 deployed/*
 *.jad

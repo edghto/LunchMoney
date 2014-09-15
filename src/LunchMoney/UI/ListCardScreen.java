@@ -1,23 +1,24 @@
-package LunchMoney.Screen;
+package LunchMoney.UI;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
 
-import LunchMoney.Card;
-import LunchMoney.CardList;
 import LunchMoney.LunchMoneyController;
+import LunchMoney.Card.Card;
+import LunchMoney.Card.CardController;
+import LunchMoney.Card.CardList;
+import LunchMoney.Card.CardListener;
 
-
-public class ListCardScreen extends List {
+public class ListCardScreen extends List implements CardListener {
 
 	protected LunchMoneyController lunchMoneyController;
 	protected Command updateCmd = new Command("Update", Command.OK, 0);
 	protected Command addCmd = new Command("Add", Command.OK, 0);
 	protected Command delCmd = new Command("Delete", Command.OK, 0);
 	protected Command editCmd = new Command("Edit", Command.OK, 0);
-	
+
 	public String getSelectedItem() {
 		return getString(getSelectedIndex());
 	}
@@ -27,7 +28,7 @@ public class ListCardScreen extends List {
 		this.lunchMoneyController = lunchMoneyController;
 
 		refresh();
-		
+
 		addCommand(updateCmd);
 		addCommand(addCmd);
 		addCommand(delCmd);
@@ -38,11 +39,11 @@ public class ListCardScreen extends List {
 					Displayable currentDisplay) {
 				if (updateCmd == command) {
 					int index = getSelectedIndex();
-					if(index >= 0) {
-						Card card = (Card)CardList.getInstance()
-								.elementAt(index);
-						if(card.update() )
-							refresh(getSelectedIndex(), card);
+					if (index >= 0) {
+						Card card = (Card) CardList.getInstance().elementAt(
+								index);
+						if (card.update())
+							card.notifyEvent(CardController.EDIT_CARD);
 						else
 							lunchMoneyController.request(
 									LunchMoneyController.NOTIFY_ERROR);
@@ -51,31 +52,45 @@ public class ListCardScreen extends List {
 					lunchMoneyController.request(
 							LunchMoneyController.NEW_CARD);
 				} else if (delCmd == command) {
-					CardList.getInstance().removeElementAt(
+					Card card = (Card) CardList.getInstance().elementAt(
 							getSelectedIndex());
-					delete(getSelectedIndex());
+					card.notifyEvent(CardController.DEL_CARD);
 				} else if (editCmd == command) {
-					lunchMoneyController.request(
-							LunchMoneyController.EDIT_CARD);
+					lunchMoneyController
+							.request(LunchMoneyController.EDIT_CARD);
 				}
 			}
 		});
 	}
-	
+
 	public void delete(int index) {
 		super.delete(index);
 	}
-	
+
 	public void refresh(int index, Card card) {
 		this.set(index, card.toString(), null);
 	}
-	
+
 	public void refresh() {
 		this.deleteAll();
 		CardList cardList = CardList.getInstance();
-		for(int i = 0; i < cardList.size(); ++i) {
+		for (int i = 0; i < cardList.size(); ++i) {
 			Card card = (Card) cardList.elementAt(i);
 			append(card.toString(), null);
 		}
+	}
+
+	public boolean processEvent(Card card, int eventType) {
+		System.out.println(card.dump() + ", event: " + eventType);
+		if (eventType == CardController.EDIT_CARD)
+			set(card.id, card.toString(), null);
+		else if (eventType == CardController.NEW_CARD)
+			card.id = append(card.toString(), null);
+		else if (eventType == CardController.DEL_CARD)
+			delete(card.id);
+		else
+			return false;
+
+		return true;
 	}
 }
