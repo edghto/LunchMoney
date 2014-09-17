@@ -41,9 +41,7 @@ public class ListCardScreen extends List implements CardListener {
 					if (index >= 0) {
 						Card card = (Card) CardList.getInstance().elementAt(
 								index);
-						if (card.update())
-							card.notifyEvent(CardController.EDIT_CARD);
-						else
+						if (!card.update())
 							lunchMoneyController.request(
 									LunchMoneyController.NOTIFY_ERROR);
 					}
