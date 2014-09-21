@@ -67,9 +67,7 @@ public class ListCardScreen extends List implements CardListener  {
 
 	public boolean processEvent(Card card, int eventType) {
 		int index = getIndex(card.recordId);
-		
-		System.out.println(card.dump() + ", event: " + eventType);
-		
+				
 		switch(eventType)
 		{
 		case CardController.EDIT_CARD:

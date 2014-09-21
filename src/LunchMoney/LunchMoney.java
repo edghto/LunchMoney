@@ -60,11 +60,9 @@ public class LunchMoney extends MIDlet implements LunchMoneyController {
 		}
 		
 		DBIterator iter = dbManager.iterate();
-		System.out.println("loadCards: numOfRecords="+iter.numRecords());
 		while(iter.hasNextElement()) {
 			try {
 				int recordId = iter.nextRecordId();
-				System.out.println("loadCards: recordId="+recordId);
 				Card card = cardController.getNewCard();
 				card.fromByte(dbManager.getRecord(recordId));
 				card.recordId = recordId;

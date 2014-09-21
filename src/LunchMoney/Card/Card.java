@@ -90,7 +90,6 @@ public class Card implements HttpPOSTCallback {
 
 	public void handleHttpPOSTRespone(byte[] message) {
 		String response = new String(message);
-		System.out.println(response);
 		response = response.substring(
 				response.indexOf("amount\":")+8,
 				response.indexOf("}"));
