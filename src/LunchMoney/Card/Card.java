@@ -89,14 +89,23 @@ public class Card implements HttpPOSTCallback {
 	}
 
 	public void handleHttpPOSTRespone(byte[] message) {
+		if(message == null) {
+			notifyEvent(CardController.CARD_ERROR);
+			return;
+		}
+		
 		String response = new String(message);
-		response = response.substring(
-				response.indexOf("amount\":")+8,
-				response.indexOf("}"));
 		
 		try {
+			response = response.substring(
+				response.indexOf("amount\":")+8,
+				response.indexOf("}"));
+			
 			balance = Double.parseDouble(response.trim());
 			notifyEvent(CardController.CARD_UPDATED);
+		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
+			notifyEvent(CardController.CARD_ERROR);
 		} catch(NumberFormatException e) {
 			e.printStackTrace();
 			notifyEvent(CardController.CARD_ERROR);
