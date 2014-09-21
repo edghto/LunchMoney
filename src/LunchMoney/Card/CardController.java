@@ -5,8 +5,10 @@ import java.util.Vector;
 public class CardController {
 	
 	public final static int NEW_CARD = 0;
-	public final static int EDIT_CARD = 1;
+	public final static int EDIT_CARD = 1; /* card number/code was changed */
 	public final static int DEL_CARD = 2;
+	public final static int CARD_ERROR = 3;
+	public static final int CARD_UPDATED = 4; /* card balance was updated */
 
 	private Vector listeners = new Vector();
 	

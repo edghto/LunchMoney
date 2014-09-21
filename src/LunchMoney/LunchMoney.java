@@ -18,7 +18,8 @@ public class LunchMoney extends MIDlet implements LunchMoneyController {
 
 	private ListCardScreen listCardScreen;
 	private NewCardScreen newCardScreen;
-	private Alert alert;
+	private Alert operationError;
+	private Alert operationInprogress;
 	private String dbName = "LunchMoney.cards.dat";
 	private CardDBManager dbManager = new CardDBManager(dbName);
 	private CardController cardController = new CardController();
@@ -33,11 +34,13 @@ public class LunchMoney extends MIDlet implements LunchMoneyController {
 		 * First load than register DB, to prevent
 		 * loop of event notifications
 		 */
-		loadCards(); 
+		loadCards();
 		cardController.registerListener(dbManager);
 		
-		//TODO is this alert even working??
-		alert = new Alert("Internal error occurred"); 
+		operationError = new Alert("", "Internal error occurred",
+				null, AlertType.ERROR);
+		operationInprogress = new Alert("", "Connection in progress",
+				null, AlertType.INFO);
 	}
 
 	protected void destroyApp(boolean arg0) {
@@ -98,11 +101,19 @@ public class LunchMoney extends MIDlet implements LunchMoneyController {
 			break;
 		case CARD_ALTERED:
 			changeDisplay(listCardScreen);
+			break;
+		case INPROGRESS:
+			operationInprogress.setTimeout(Alert.FOREVER);
+			Display.getDisplay(this)
+				.setCurrent(operationInprogress, listCardScreen);
+			break;
 		case NOTIFY_ERROR:
 		default:
-			alert.setTimeout(5000);
-		    alert.setType(AlertType.ERROR);
-			break;				
+			/* when error occurs it goes back to list screen */
+			operationError.setTimeout(Alert.FOREVER);
+			Display.getDisplay(this)
+				.setCurrent(operationError, listCardScreen);
+			break;
 		}
 	}
 }

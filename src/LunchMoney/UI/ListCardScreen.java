@@ -13,13 +13,14 @@ import LunchMoney.Card.CardController;
 import LunchMoney.Card.CardList;
 import LunchMoney.Card.CardListener;
 
-public class ListCardScreen extends List implements CardListener {
+public class ListCardScreen extends List implements CardListener  {
 
 	private Command updateCmd = new Command("Update", Command.SCREEN, 0);
 	private Command addCmd = new Command("Add", Command.OK, 0);
 	private Command delCmd = new Command("Delete", Command.OK, 0);
 	private Command editCmd = new Command("Edit", Command.OK, 0);
 	private Vector cardsId = new Vector();
+	private LunchMoneyController lunchMoneyController = null;
 
 	public String getSelectedItem() {
 		return getString(getSelectedIndex());
@@ -28,6 +29,7 @@ public class ListCardScreen extends List implements CardListener {
 	public ListCardScreen(final LunchMoneyController lunchMoneyController) {
 		super("Your Lunch Cards", List.IMPLICIT);
 		
+		this.lunchMoneyController  = lunchMoneyController;
 		addCommand(updateCmd);
 		addCommand(addCmd);
 		addCommand(delCmd);
@@ -44,6 +46,9 @@ public class ListCardScreen extends List implements CardListener {
 						if (!card.update())
 							lunchMoneyController.request(
 									LunchMoneyController.NOTIFY_ERROR);
+						else
+							lunchMoneyController.request(
+									LunchMoneyController.INPROGRESS);
 					}
 				} else if (addCmd == command) {
 					lunchMoneyController.request(
@@ -65,15 +70,29 @@ public class ListCardScreen extends List implements CardListener {
 		
 		System.out.println(card.dump() + ", event: " + eventType);
 		
-		if (eventType == CardController.EDIT_CARD) {
+		switch(eventType)
+		{
+		case CardController.EDIT_CARD:
 			set(index, card.toString(), null);
-		} else if (eventType == CardController.NEW_CARD) {
+			break;
+		case CardController.CARD_UPDATED:
+			set(index, card.toString(), null);
+			lunchMoneyController.request(
+					LunchMoneyController.CARD_ALTERED);
+			break;
+		case CardController.NEW_CARD:
 			append(card.toString(), null);
 			cardsId.addElement(new Integer(card.recordId));
-		} else if (eventType == CardController.DEL_CARD) {
+			break;
+		case CardController.DEL_CARD:
 			delete(index);
 			cardsId.removeElementAt(index);
-		} else {
+			break;
+		case CardController.CARD_ERROR:
+			lunchMoneyController.request(
+					LunchMoneyController.NOTIFY_ERROR);
+			break;
+		default:
 			return false;
 		}
 		

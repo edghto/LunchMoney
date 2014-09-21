@@ -96,10 +96,11 @@ public class Card implements HttpPOSTCallback {
 				response.indexOf("}"));
 		
 		try {
-			balance = Double.parseDouble(response.trim());	
+			balance = Double.parseDouble(response.trim());
+			notifyEvent(CardController.CARD_UPDATED);
 		} catch(NumberFormatException e) {
 			e.printStackTrace();
+			notifyEvent(CardController.CARD_ERROR);
 		}
-		notifyEvent(CardController.EDIT_CARD);
 	}
 }
